@@ -1,14 +1,17 @@
-import { ChakraProvider } from '@chakra-ui/react'
+import { DAppProvider } from "@usedapp/core";
+import { ChakraProvider } from "@chakra-ui/react";
 
-import theme from '../theme'
-import { AppProps } from 'next/app'
+import theme from "../theme";
+import { AppProps } from "next/app";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider resetCSS theme={theme}>
-      <Component {...pageProps} />
+      <DAppProvider config={{ supportedChains: [137] }}>
+        <Component {...pageProps} />
+      </DAppProvider>
     </ChakraProvider>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;

@@ -1,56 +1,42 @@
-import {
-  Link as ChakraLink,
-  Text,
-  Code,
-  List,
-  ListIcon,
-  ListItem,
-} from '@chakra-ui/react'
-import { CheckCircleIcon, LinkIcon } from '@chakra-ui/icons'
+import { Button, Input, Heading } from "@chakra-ui/react";
 
-import { Hero } from '../components/Hero'
-import { Container } from '../components/Container'
-import { Main } from '../components/Main'
-import { DarkModeSwitch } from '../components/DarkModeSwitch'
-import { CTA } from '../components/CTA'
-import { Footer } from '../components/Footer'
+import { Container } from "../components/Container";
+import { Main } from "../components/Main";
+import { DarkModeSwitch } from "../components/DarkModeSwitch";
+import { CTA } from "../components/CTA";
+import { useEthers, shortenAddress } from "@usedapp/core";
+import { useState } from "react";
+import { Disapprove } from "../components/Disapprove";
+import { isAddress } from "@ethersproject/address";
 
-const Index = () => (
-  <Container height="100vh">
-    <Hero />
-    <Main>
-      <Text>
-        Example repository of <Code>Next.js</Code> + <Code>chakra-ui</Code> +{' '}
-        <Code>typescript</Code>.
-      </Text>
+const Index = () => {
+  const [tokenAddress, setTokenAddress] = useState("");
+  const { activateBrowserWallet, account, deactivate, library } = useEthers();
 
-      <List spacing={3} my={0}>
-        <ListItem>
-          <ListIcon as={CheckCircleIcon} color="green.500" />
-          <ChakraLink
-            isExternal
-            href="https://chakra-ui.com"
-            flexGrow={1}
-            mr={2}
-          >
-            Chakra UI <LinkIcon />
-          </ChakraLink>
-        </ListItem>
-        <ListItem>
-          <ListIcon as={CheckCircleIcon} color="green.500" />
-          <ChakraLink isExternal href="https://nextjs.org" flexGrow={1} mr={2}>
-            Next.js <LinkIcon />
-          </ChakraLink>
-        </ListItem>
-      </List>
-    </Main>
+  return (
+    <Container height="100vh">
+      <DarkModeSwitch />
+      <Button
+        top="1rem"
+        right="1rem"
+        position="absolute"
+        colorScheme="blue"
+        onClick={account ? deactivate : activateBrowserWallet}
+      >
+        {account ? shortenAddress(account) : "Connect"}
+      </Button>
+      {console.log(library)}
+      <Heading fontSize="6rem" bgGradient="linear(to-l, #7928CA, #FF0080)" bgClip="text">
+        disapprove
+      </Heading>
+      <Main>
+        <Input onChange={e => setTokenAddress(e.target.value)} placeholder="token address" />
+        {isAddress(tokenAddress) && <Disapprove contractAddress={tokenAddress} />}
+      </Main>
 
-    <DarkModeSwitch />
-    <Footer>
-      <Text>Next ❤️ Chakra</Text>
-    </Footer>
-    <CTA />
-  </Container>
-)
+      <CTA />
+    </Container>
+  );
+};
 
-export default Index
+export default Index;
